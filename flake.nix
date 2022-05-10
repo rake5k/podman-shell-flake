@@ -28,7 +28,8 @@
         "${name}" = final.callPackage podman-shell { };
       };
     in
-    flake-utils.lib.eachDefaultSystem
+    flake-utils.lib.eachSystem
+      [ "aarch64-linux" "i686-linux" "x86_64-linux" ]
       (system:
         let
           pkgs = import nixpkgs {
