@@ -20,7 +20,7 @@ jobs:
           - x86_64
         nix-command:
           - flake check
-          - eval .#apps.$_system.hinclient.program
+          - eval .#apps.$_system.podman-shell.program
 
         include:
           - nix-command: develop
