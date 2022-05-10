@@ -77,7 +77,7 @@
             shellHook = ''
               figlet ${name} | lolcat --freq 0.5
               ${checks.pre-commit-check.shellHook}
-              ${packages.${name}.shellHook}
+              ${packages."${name}".shellHook}
             '';
           };
         }) // {

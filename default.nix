@@ -19,26 +19,28 @@ let
   # };
 
   # Provides a script that copies required files to ~/
-  setupScript = let
-    registriesConf = writeText "registries.conf" ''
-      [registries.search]
-      registries = ['docker.io']
-      [registries.block]
-      registries = []
+  setupScript =
+    let
+      registriesConf = writeText "registries.conf" ''
+        [registries.search]
+        registries = ['docker.io']
+        [registries.block]
+        registries = []
+      '';
+    in
+    writeScript "podman-setup" ''
+      #!${runtimeShell}
+      # Dont overwrite customised configuration
+      if ! test -f ~/.config/containers/policy.json; then
+        install -Dm555 ${skopeo.src}/default-policy.json ~/.config/containers/policy.json
+      fi
+      if ! test -f ~/.config/containers/registries.conf; then
+        install -Dm555 ${registriesConf} ~/.config/containers/registries.conf
+      fi
     '';
-  in writeScript "podman-setup" ''
-    #!${runtimeShell}
-    # Dont overwrite customised configuration
-    if ! test -f ~/.config/containers/policy.json; then
-      install -Dm555 ${skopeo.src}/default-policy.json ~/.config/containers/policy.json
-    fi
-    if ! test -f ~/.config/containers/registries.conf; then
-      install -Dm555 ${registriesConf} ~/.config/containers/registries.conf
-    fi
-  '';
 
   # Provides a fake "docker" binary mapping to podman
-  dockerCompat = runCommandNoCC "docker-podman-compat" {} ''
+  dockerCompat = runCommandNoCC "docker-podman-compat" { } ''
     mkdir -p $out/bin
     ln -s ${podman}/bin/podman $out/bin/docker
   '';
@@ -50,12 +52,12 @@ podman.overrideAttrs (attrs: {
   inherit dockerCompat;
 
   buildInputs = [
-    podman  # Docker compat
-    runc  # Container runtime
-    conmon  # Container runtime monitor
-    skopeo  # Interact with container registry
-    slirp4netns  # User-mode networking for unprivileged namespaces
-    fuse-overlayfs  # CoW for images, much faster than default vfs
+    podman # Docker compat
+    runc # Container runtime
+    conmon # Container runtime monitor
+    skopeo # Interact with container registry
+    slirp4netns # User-mode networking for unprivileged namespaces
+    fuse-overlayfs # CoW for images, much faster than default vfs
   ];
 
   shellHook = setupScript;
