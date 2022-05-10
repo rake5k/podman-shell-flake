@@ -1,5 +1,5 @@
 {
-  description = "Podman";
+  description = "Podman Shell";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-21.11";
@@ -70,6 +70,7 @@
               statix
 
               packages."${name}"
+              packages."${name}".dockerCompat
             ];
 
             shellHook = ''

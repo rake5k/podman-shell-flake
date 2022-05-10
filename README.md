@@ -46,7 +46,8 @@ For providing the `podman-shell` in a Nix development shell, this flake needs to
         name = "my-dev-shell";
 
         buildInputs = with pkgs; [
-          pkgs.podman-shell
+          podman-shell
+          podman-shell.dockerCompat # optional - for use as a `docker` drop-in replacement
         ];
 
         inherit (pkgs.podman-shell) shellHook;
