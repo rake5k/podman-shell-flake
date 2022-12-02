@@ -2,64 +2,84 @@
   description = "Podman Shell";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-21.11";
-
-    flake-utils = {
-      url = "github:numtide/flake-utils";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
     pre-commit-hooks = {
       url = "github:cachix/pre-commit-hooks.nix?rev=6799201bec19b753a4ac305a53d34371e497941e";
       inputs = {
         nixpkgs.follows = "nixpkgs";
-        flake-utils.follows = "flake-utils";
       };
     };
   };
 
-  outputs = { self, nixpkgs, flake-utils, pre-commit-hooks }:
+  outputs = { self, nixpkgs, pre-commit-hooks }:
     let
       name = "podman-shell";
 
       podman-shell = import ./default.nix;
 
       overlay = final: prev: {
-        "${name}" = final.callPackage podman-shell { };
+        ${name} = final.callPackage podman-shell { };
       };
+
+      # System types to support.
+      supportedSystems = [ "x86_64-linux" ];
+
+      # Helper function to generate an attrset '{ x86_64-linux = f "x86_64-linux"; ... }'.
+      forAllSystems = nixpkgs.lib.genAttrs supportedSystems;
+
+      # Nixpkgs instantiated for supported system types.
+      nixpkgsFor = forAllSystems (system: import nixpkgs {
+        inherit system;
+        config = { allowUnfree = true; };
+        overlays = [ overlay ];
+      });
     in
-    flake-utils.lib.eachSystem
-      [ "i686-linux" "x86_64-linux" ]
-      (system:
+    {
+
+      apps = forAllSystems (system: {
+        ${name} = {
+          type = "app";
+          program = "${self.packages.${system}.${name}}/bin/podman";
+        };
+        default = self.apps.${system}.${name};
+      });
+
+      packages = forAllSystems (system:
         let
-          pkgs = import nixpkgs {
-            inherit system;
-            overlays = [ overlay ];
-          };
+          pkgs = nixpkgsFor.${system};
         in
-        rec {
+        {
+          ${name} = pkgs.callPackage podman-shell { };
+          default = self.packages.${system}.${name};
+        });
 
-          apps."${name}" = flake-utils.lib.mkApp { drv = packages."${name}"; };
+      overlays.default = final: prev: {
+        ${name} = self.packages.${prev.system}.default;
+      };
 
-          defaultApp = apps."${name}";
+      checks = forAllSystems (system:
+        let
+          pkgs = nixpkgsFor.${system};
+        in
+        {
+          build = self.packages.${system}.${name};
 
-          packages."${name}" = pkgs.callPackage podman-shell { };
-
-          defaultPackage = packages."${name}";
-
-          checks = {
-            build = pkgs."${name}";
-
-            pre-commit-check = pre-commit-hooks.lib."${system}".run {
-              src = ./.;
-              hooks = {
-                nixpkgs-fmt.enable = true;
-                statix.enable = true;
-              };
+          pre-commit-check = pre-commit-hooks.lib.${system}.run {
+            src = ./.;
+            hooks = {
+              nixpkgs-fmt.enable = true;
+              statix.enable = true;
             };
           };
+        });
 
-          devShell = pkgs.mkShell {
+      devShells = forAllSystems (system:
+        let
+          pkgs = nixpkgsFor.${system};
+        in
+        {
+          default = pkgs.mkShell {
             inherit name;
 
             buildInputs = with pkgs; [
@@ -70,17 +90,16 @@
               nixpkgs-fmt
               statix
 
-              packages."${name}"
-              packages."${name}".dockerCompat
+              self.packages.${system}.${name}
+              self.packages.${system}.${name}.dockerCompat
             ];
 
             shellHook = ''
               figlet ${name} | lolcat --freq 0.5
-              ${checks.pre-commit-check.shellHook}
-              ${packages."${name}".shellHook}
+              ${self.checks.${system}.pre-commit-check.shellHook}
+              ${self.packages.${system}.${name}.shellHook}
             '';
           };
-        }) // {
-      inherit overlay;
+        });
     };
 }
