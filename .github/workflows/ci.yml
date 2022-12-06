@@ -2,5 +2,12 @@ name: Build and test
 on: [ push ]
 
 jobs:
-  nix-ci:
+  nix-ci-x86:
     uses: christianharke/flake-commons/.github/workflows/nix-ci.yml@main
+    with:
+      system: x86_64
+
+  nix-ci-arm:
+    uses: christianharke/flake-commons/.github/workflows/nix-ci.yml@main
+    with:
+      system: aarch64
