@@ -5,6 +5,7 @@ jobs:
   nix-ci-x86:
     uses: christianharke/flake-commons/.github/workflows/nix-ci.yml@main
     with:
+      branch: ${{ github.ref_name }}
       system: x86_64
     secrets:
       CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
@@ -12,6 +13,7 @@ jobs:
   nix-ci-arm:
     uses: christianharke/flake-commons/.github/workflows/nix-ci.yml@main
     with:
+      branch: ${{ github.ref_name }}
       system: aarch64
     secrets:
       CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
