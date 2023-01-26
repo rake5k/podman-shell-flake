@@ -8,17 +8,6 @@ This flake should enable you to inject podman as a development environment depen
 
 ## Usage
 
-### Directly
-
-To fire off podman in a Nix shell quickly, just use this command to run a `hello-world` container
-from the Docker Hub:
-
-```bash
-nix run github:christianharke/podman-shell-flake -- run hello-world
-```
-
-### Nix Overlay
-
 For providing the `podman-shell` in a Nix development shell, this flake needs to be added to the
 `inputs` and its `overlay` registered in the `pkgs` overlay. Afterwards it can just be added to the
 `buildInputs` - but don't forget to integrate its `shellHook` as well.
