@@ -4,6 +4,8 @@
 , skopeo
 , slirp4netns
 , fuse-overlayfs
+, gpgme
+, libseccomp
 , writeText
 , writeScript
 , runtimeShell
@@ -58,6 +60,8 @@ podman.overrideAttrs (attrs: {
     skopeo # Interact with container registry
     slirp4netns # User-mode networking for unprivileged namespaces
     fuse-overlayfs # CoW for images, much faster than default vfs
+    gpgme
+    libseccomp
   ];
 
   shellHook = setupScript;
