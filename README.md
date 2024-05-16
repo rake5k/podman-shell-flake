@@ -20,7 +20,7 @@ For providing the `podman-shell` in a Nix development shell, this flake needs to
 {
   description = "Podman shell flake demo";
 
-  inputs.podman-shell.url = "github:christianharke/podman-shell-flake";
+  inputs.podman-shell.url = "github:rake5k/podman-shell-flake";
 
   outputs = { self, nixpkgs, podman-shell }:
     let
@@ -53,8 +53,8 @@ Highly inspired by [adisbladis' podman-shell.nix](https://gist.github.com/adisbl
 
 [nixos]: https://nixos.org/
 [nixos-badge]: https://img.shields.io/badge/NixOS-blue.svg?logo=NixOS&logoColor=white
-[ci]: https://github.com/christianharke/podman-shell-flake/actions/workflows/ci.yml
-[ci-badge]: https://github.com/christianharke/podman-shell-flake/actions/workflows/ci.yml/badge.svg
-[update]: https://github.com/christianharke/podman-shell-flake/actions/workflows/update.yml
-[update-badge]: https://github.com/christianharke/podman-shell-flake/actions/workflows/update.yml/badge.svg
+[ci]: https://github.com/rake5k/podman-shell-flake/actions/workflows/ci.yml
+[ci-badge]: https://github.com/rake5k/podman-shell-flake/actions/workflows/ci.yml/badge.svg
+[update]: https://github.com/rake5k/podman-shell-flake/actions/workflows/update.yml
+[update-badge]: https://github.com/rake5k/podman-shell-flake/actions/workflows/update.yml/badge.svg
 

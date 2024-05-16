@@ -5,7 +5,7 @@ on:
 
 jobs:
   nix-update:
-    uses: christianharke/flake-commons/.github/workflows/nix-update.yml@main
+    uses: rake5k/flake-commons/.github/workflows/nix-update.yml@main
     with:
       aarch64: true
       x86_64: true

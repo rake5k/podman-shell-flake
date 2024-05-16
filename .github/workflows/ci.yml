@@ -3,7 +3,7 @@ on: [ push ]
 
 jobs:
   nix-ci:
-    uses: christianharke/flake-commons/.github/workflows/nix-ci.yml@main
+    uses: rake5k/flake-commons/.github/workflows/nix-ci.yml@main
     with:
       branch: ${{ github.ref_name }}
       system: x86_64-linux
@@ -11,7 +11,7 @@ jobs:
       CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
 
   nix-ci-arm:
-    uses: christianharke/flake-commons/.github/workflows/nix-ci-arm.yml@main
+    uses: rake5k/flake-commons/.github/workflows/nix-ci-arm.yml@main
     with:
       branch: ${{ github.ref_name }}
     secrets:
