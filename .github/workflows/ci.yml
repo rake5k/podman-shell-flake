@@ -9,10 +9,3 @@ jobs:
       system: x86_64-linux
     secrets:
       CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
-
-  nix-ci-arm:
-    uses: rake5k/flake-commons/.github/workflows/nix-ci-arm.yml@main
-    with:
-      branch: ${{ github.ref_name }}
-    secrets:
-      CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
