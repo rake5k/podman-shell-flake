@@ -5,9 +5,4 @@ on:
 
 jobs:
   nix-update:
-    uses: rake5k/flake-commons/.github/workflows/nix-update.yml@main
-    with:
-      aarch64: false
-      x86_64: true
-    secrets:
-      CACHIX_AUTH_TOKEN: ${{ secrets.CACHIX_AUTH_TOKEN }}
+    uses: rake5k/flake-commons/.github/workflows/update-flake-lock.yml@main
