@@ -1,7 +1,6 @@
 # Podman Nix Development Shell Flake
 
 [![NixOS][nixos-badge]][nixos]
-[![Build and Test][ci-badge]][ci]
 
 This flake should enable you to inject podman as a development environment dependency.
 
@@ -52,5 +51,3 @@ Highly inspired by [adisbladis' podman-shell.nix](https://gist.github.com/adisbl
 
 [nixos]: https://nixos.org/
 [nixos-badge]: https://img.shields.io/badge/NixOS-blue.svg?logo=NixOS&logoColor=white
-[ci]: https://garnix.io/repo/rake5k/podman-shell-flake
-[ci-badge]: https://img.shields.io/endpoint.svg?url=https%3A%2F%2Fgarnix.io%2Fapi%2Fbadges%2Frake5k%2Fpodman-shell-flake%3Fbranch%3Dmain
